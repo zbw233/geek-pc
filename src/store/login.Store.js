@@ -1,5 +1,5 @@
-import { http, setToken, getToken } from "@/utils";
-import { makeAutoObservable } from "mobx";
+import { http, setToken, getToken, clearToken } from "@/utils";
+import { makeAutoObservable, runInAction } from "mobx";
 
 class LoginStore {
   token = getToken() || "";
@@ -11,8 +11,14 @@ class LoginStore {
       mobile,
       code,
     });
-    this.token = res.data.token;
+    runInAction(() => {
+      this.token = res.data.token;
+    });
     setToken(this.token);
+  };
+  Logout = () => {
+    this.token = "";
+    clearToken();
   };
 }
 export default LoginStore;
